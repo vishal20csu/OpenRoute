@@ -1,14 +1,12 @@
-
 import React, { useState } from "react";
-import RoutingMap from "./RoutingMap";
-
+import RoutingMap from "./RoutingMap"; // your existing map component
 
 const App = () => {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
-  const [destination, setDestination] = useState(""); 
+  const [destination, setDestination] = useState("");
 
-
+  // Get user’s current location
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -25,7 +23,7 @@ const App = () => {
     }
   };
 
-
+  // Fetch destination coordinates from backend
   const getDestinationLocation = async () => {
     if (!destination) {
       alert("Please enter a destination.");
@@ -33,19 +31,28 @@ const App = () => {
     }
 
     try {
+     
       const response = await fetch(
-        `http://localhost:8080/location?query=${destination}`
+        `/location?query=${encodeURIComponent(destination)}`
       );
-      const data = await response.json();
 
-      if (data.length > 0) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Backend response:", data);
+
+      if (data.length > 0 && data[0].lat && data[0].lon) {
         setEnd([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
       } else {
         alert("Location not found!");
       }
     } catch (error) {
       console.error("Error fetching destination: ", error);
-      alert("Failed to fetch location. Check the backend server.");
+      alert(
+        "Failed to fetch location. Make sure your backend is running on port 8080."
+      );
     }
   };
 
@@ -53,9 +60,7 @@ const App = () => {
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h1>Map Routing</h1>
 
-
       <button onClick={getCurrentLocation}>Get Current Location</button>
-
 
       <input
         type="text"
@@ -65,7 +70,6 @@ const App = () => {
         style={{ marginLeft: "10px" }}
       />
       <button onClick={getDestinationLocation}>Find Destination</button>
-
 
       {start && end && <RoutingMap start={start} end={end} />}
     </div>
