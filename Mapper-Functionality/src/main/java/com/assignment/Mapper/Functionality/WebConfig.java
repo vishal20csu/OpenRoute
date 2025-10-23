@@ -14,7 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")   // Allow all endpoints
-                        .allowedOrigins("http://localhost:3000") // Allow your frontend
+                        .allowedOrigins("https://open-route.vercel.app/") // Allow your frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
