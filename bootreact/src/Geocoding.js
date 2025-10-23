@@ -11,9 +11,9 @@ const Geocoding = () => {
 
     try {
 
-      const response = await fetch(`/location?query=${query}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/location?query=${query}`);
       const data = await response.json();
-      
+
 
       
       if (data.length > 0) {

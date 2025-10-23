@@ -33,7 +33,7 @@ const App = () => {
     try {
      
       const response = await fetch(
-        `/location?query=${encodeURIComponent(destination)}`
+        `${process.env.REACT_APP_BACKEND_URL}/location?query=${encodeURIComponent(destination)}`
       );
 
       if (!response.ok) {
